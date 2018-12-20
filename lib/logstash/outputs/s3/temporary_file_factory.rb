@@ -64,13 +64,15 @@ module LogStash
         end
 
         def generate_name
-          filename = "ls.s3.#{SecureRandom.uuid}.#{current_time}"
-
           if tags.size > 0
-            "#{filename}.tag_#{tags.join('.')}.part#{counter}.#{extension}"
+            prefix = tags.join('.');
           else
-            "#{filename}.part#{counter}.#{extension}"
+            prefix = "notags"
           end
+
+          date_s3 = Time.new.strftime(“%Y/%m/%d”)
+
+          return "#{prefix}/#{date_s3}/#{current_time}.#{SecureRandom.uuid}.part#{counter}.#{extension}"
         end
 
         def new_file
